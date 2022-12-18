@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void header(){
+	    printf("===========================================================\n");
+	    printf("|               Program Menghitung Angsuran               |\n");
+	    printf("|             Praktikum Algoritma Pemrograman             |\n");
+	    printf("|                        Kelompok 16                      |\n");
+	    printf("===========================================================\n");
+}
+
+void cover (){
+	    printf("===========================================================\n");
+	    printf("|               Program Menghitung Angsuran               |\n");
+	    printf("|             Praktikum Algoritma Pemrograman             |\n");
+	    printf("|                        Kelompok 16                      |\n");
+	    printf("===========================================================\n");
+	    printf("| KETIK SESUATU UNTUK MELANJUTKAN			              |\n");
+	    printf("===========================================================\n");
+}
+
+int validasi(int *var){
+	char buff[1024]; //memberikan besar penyimpanan pada variabel buff, 1024 adalah panjang karakter yang dapat dibaca
+	char cek;
+	fflush(stdin);
+	if(fgets(buff, sizeof(buff), stdin) != NULL){ //memberikan parameter kepada inputan yang akan dimasukan user lalu melakukan validasi dan akan berhenti ketika validasi sudah sesuai dan menghasilkan (NULL)
+		if(sscanf(buff, "%d %c", var, &cek) == 1) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+void revalidint(int *var, char *prompt){ //memvalidasi setiap inputan yang dimasukan
+	while(1){
+		printf(prompt);
+		if(validasi(var)) //memberikan parameter untuk setiap inputan yang dimasukan
+			break; 
+		printf("Input salah! Silahkan coba lagi! \n"); //ketika inputan tidak sesuai dengan parameter yang ditentukan, program akan menulis ini
+	}
+}
+
+int cekmengulang(char y, char n, char *prompt){ //memvalidasi inputan untuk perulangan program
+    char cek;
+	while(1){
+		printf(prompt); 
+		fflush(stdin);
+		scanf("%c", &cek);
+		if((cek=='y' || cek=='Y') || (cek=='t' || cek=='T')){ // ketika menginput karakter dengan atau tanpa capslock akan tetap dibaca
+			if (cek == 'y' || cek == 'Y'){ //ketika menginput Y/y program akan diulang dan dihapus lembarannya
+				 system("cls||clear");
+			}
+			break;
+		}else{ 
+		printf("Input salah! Silahkan coba lagi! \n"); // ketika menginput yang lain dari pilihan yang diberikan maka akan mengeluarkan print ini
+		}
+	}
+	if(cek=='t' || cek=='T') return 0; //ketika memilih t/T maka program akan dihentikan 
+	return 1;
+}
+
+void registrasi(){
+    int pinjaman; 
+    int waktu;    
+    int bungabulan;
+    int bungatahun;
+    int angsuranpokok;
+    int angsuranbulan;
+    int totalbunga = 0;
+    int totalangsuran = 0;
+    int i;
+
+    do{
+		 system("cls||clear");
+		printf("=========================================================================\n");
+		printf("||                      Program Menghitung Angsuran                    ||\n");
+		printf("||                    Praktikum Algoritma Pemrograman                  ||\n");
+		printf("||                               Kelompok 16                           ||\n");
+		printf("=========================================================================\n");
+		revalidint(&pinjaman, "Pokok Pinjaman (Rp) : "); 		 //inputan yang dimasukan user akan divalidasi ke revalidint() dan menggunakan parameter penentu validasi()
+		while(pinjaman<1){ 										 //ketika input yang dimasukan sebesar 0 atau dibawahnya maka pengguna akan diminta memasukan ulang
+		printf("Masukkan Jumlah Yang Benar!\n");
+		revalidint(&pinjaman, "Pokok Pinjaman (Rp) : \n");	 //inputan yang baru akan tetap divalidasi dan apabila masih salah dari parameter yang ditentukan maka request input akan terus ditampilkan
+		}
+		revalidint(&bungatahun, "Besar Bunga (%%) : ");
+		while(bungatahun<0){
+		printf("mohon berikan angka rentang dari 1 - 100\n");
+		revalidint(&bungatahun, "Besar Bunga (%%) : \n");
+		}
+		revalidint(&waktu, "Lama Pinjaman (Bulan) : ");
+		while(waktu<=0 || waktu>=60){
+		printf("Masukkan Jumlah Yang Benar!\n");
+		revalidint(&waktu, "Lama Pinjaman (Bulan) : \n");
+		}
+	
+		printf("=========================================================================\n");
+		printf("||  Bulan  ||   Bunga   ||   Angsuran Pokok   ||   Angsuran Perbulan   ||\n");
+		printf("=========================================================================\n");
+			for(i=1;i<=waktu;i++){
+					angsuranpokok = pinjaman / waktu;
+					bungabulan = (pinjaman - ((i-1) * angsuranpokok)) * bungatahun / 100 / 12;
+					angsuranbulan = bungabulan + angsuranpokok;
+					totalbunga += bungabulan;
+					totalangsuran += angsuranbulan;
+
+			printf("||    %d   ||   %d%%     ||    Rp.%d       ||      Rp.%d      ||\n", i, bungabulan, angsuranpokok, angsuranbulan);
+			}
+		printf("=========================================================================\n");
+		printf("||Total Bunga                                 : Rp.%d               ||\n", totalbunga);
+		printf("||Total Angsuran                              : Rp.%d             ||\n", totalangsuran);
+		printf("=========================================================================\n");
+    }
+    while (cekmengulang('y','t', "Ingin Menghitung Lagi? (y/t) : \n"));
+}
+
+int main(){
+	header();
+	system("pause");
+	 system("cls||clear");
+
+	cover();
+	system("pause");
+	 system("cls||clear");
+
+	registrasi();
+}
